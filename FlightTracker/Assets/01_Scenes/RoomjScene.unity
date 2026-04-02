@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirportRenderer
   earthSphere: {fileID: 452547227}
+  unlitMaterialTemplate: {fileID: 2100000, guid: ba3fcb722d7a348c2b37a03b0e299fd7, type: 2}
   airportColor: {r: 1, g: 0.15, b: 0.15, a: 1}
   dotSize: 0.2
   surfaceOffset: 0.2
@@ -181,6 +182,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -256,7 +258,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -149.2}
+  m_LocalPosition: {x: 0, y: 0, z: -150}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -306,6 +308,26 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af7c85c8fb944f05a464aa6543a6914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitCamera
+  target: {fileID: 452547227}
+  orbitSensitivity: 2
+  pitchMin: -80
+  pitchMax: 80
+  distanceFromSurface: 150
+  minDistance: 10
+  maxDistance: 500
+  zoomSensitivity: 0.15
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +339,7 @@ GameObject:
   - component: {fileID: 410087041}
   - component: {fileID: 410087040}
   - component: {fileID: 410087042}
+  - component: {fileID: 410087043}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -433,6 +456,21 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &410087043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410087039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab3baf0888324457ae663b5e1db20a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SunLight
+  earthSphere: {fileID: 452547227}
+  longitudeOffset: 0
+  updateInterval: 10
 --- !u!1 &452547226
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,6 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthGeoRenderer
   earthSphere: {fileID: 452547227}
+  unlitMaterialTemplate: {fileID: 2100000, guid: ba3fcb722d7a348c2b37a03b0e299fd7, type: 2}
   borderColor: {r: 1, g: 1, b: 1, a: 0.6}
   lineWidth: 0.05
   capitalColor: {r: 1, g: 0.85, b: 0, a: 1}
@@ -678,6 +717,7 @@ MonoBehaviour:
   earthSphere: {fileID: 452547227}
   dotSize: 0.3
   surfaceOffset: 0.3
+  dotMaterialTemplate: {fileID: 2100000, guid: ba3fcb722d7a348c2b37a03b0e299fd7, type: 2}
   colorAsia: {r: 0.2, g: 0.85, b: 1, a: 1}
   colorEurope: {r: 0.5, g: 0.5, b: 1, a: 1}
   colorNorthAmerica: {r: 0.3, g: 1, b: 0.4, a: 1}

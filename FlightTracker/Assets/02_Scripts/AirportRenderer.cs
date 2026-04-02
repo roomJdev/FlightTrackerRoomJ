@@ -20,6 +20,11 @@ public class AirportRenderer : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform earthSphere;
 
+    [Header("Material")]
+    [Tooltip("URP Unlit 셰이더로 만든 Material 에셋을 할당\n" +
+             "(Project > Create > Material → Shader: Universal Render Pipeline/Unlit)")]
+    [SerializeField] private Material unlitMaterialTemplate;
+
     [Header("Airport Dot Settings")]
     [SerializeField] private Color airportColor  = new Color(1f, 0.15f, 0.15f); // 빨간색
     [SerializeField] private float dotSize       = 0.2f;
@@ -60,7 +65,7 @@ public class AirportRenderer : MonoBehaviour
     {
         string filePath = System.IO.Path.Combine(
             Application.streamingAssetsPath, "geo", "airports.csv");
-        string uri = filePath.Contains("://") ? filePath : "file://" + filePath;
+        string uri = new System.Uri(filePath).AbsoluteUri;
 
         using (var req = UnityWebRequest.Get(uri))
         {
@@ -180,9 +185,14 @@ public class AirportRenderer : MonoBehaviour
 
     private Material CreateUnlitMaterial(Color color)
     {
-        var shader = Shader.Find("Universal Render Pipeline/Unlit")
-                  ?? Shader.Find("Unlit/Color");
-        var mat = new Material(shader);
+        if (unlitMaterialTemplate == null)
+        {
+            Debug.LogError("[AirportRenderer] unlitMaterialTemplate이 할당되지 않았습니다.\n" +
+                           "Inspector에서 URP Unlit Material을 Unlit Material Template에 할당하세요.");
+            return new Material(Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Color"));
+        }
+
+        var mat = new Material(unlitMaterialTemplate);
         mat.SetColor("_BaseColor", color);
         return mat;
     }

@@ -21,6 +21,11 @@ public class EarthGeoRenderer : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform earthSphere;
 
+    [Header("Material")]
+    [Tooltip("URP Unlit 셰이더로 만든 Material 에셋을 할당\n" +
+             "(Project > Create > Material → Shader: Universal Render Pipeline/Unlit)")]
+    [SerializeField] private Material unlitMaterialTemplate;
+
     [Header("Border Settings")]
     [SerializeField] private Color borderColor = new Color(1f, 1f, 1f, 0.6f);
     [SerializeField] private float lineWidth = 0.05f;
@@ -64,7 +69,7 @@ public class EarthGeoRenderer : MonoBehaviour
     private IEnumerator LoadBorders()
     {
         string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "geo", "countries.geojson");
-        string uri = filePath.Contains("://") ? filePath : "file://" + filePath;
+        string uri = new System.Uri(filePath).AbsoluteUri;
 
         using (var req = UnityWebRequest.Get(uri))
         {
@@ -275,9 +280,14 @@ public class EarthGeoRenderer : MonoBehaviour
 
     private Material CreateUnlitMaterial(Color color)
     {
-        var shader = Shader.Find("Universal Render Pipeline/Unlit")
-                  ?? Shader.Find("Unlit/Color");
-        var mat = new Material(shader);
+        if (unlitMaterialTemplate == null)
+        {
+            Debug.LogError("[EarthGeoRenderer] unlitMaterialTemplate이 할당되지 않았습니다.\n" +
+                           "Inspector에서 URP Unlit Material을 Unlit Material Template에 할당하세요.");
+            return new Material(Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Color"));
+        }
+
+        var mat = new Material(unlitMaterialTemplate);
         mat.SetColor("_BaseColor", color);
         return mat;
     }

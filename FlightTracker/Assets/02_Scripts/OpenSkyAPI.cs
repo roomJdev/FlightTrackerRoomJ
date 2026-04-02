@@ -37,15 +37,25 @@ public class OpenSkyAPI : MonoBehaviour
     }
 
     /// <summary>
-    /// 프로젝트 루트의 credentials.json에서 clientId/clientSecret 로드
-    /// 이 파일은 .gitignore에 포함되어 있어 절대 커밋되지 않음
-    /// 경로: {프로젝트루트}/credentials.json  (Assets 폴더 옆)
+    /// credentials.json 로드
+    ///
+    /// 에디터:  프로젝트 루트 (Assets 폴더 옆) — .gitignore로 커밋 방지
+    /// 빌드:    실행 파일 옆 (Windows) / .app 바깥 폴더 (macOS)
+    ///          → 빌드 배포 시 이 파일을 함께 넣지 말 것
+    ///          → 파일 없으면 익명 모드로 자동 폴백
     /// </summary>
     private void LoadCredentials()
     {
-        // Application.dataPath = .../FlightTracker/Assets
-        // 한 단계 위가 프로젝트 루트
-        string path = System.IO.Path.Combine(Application.dataPath, "..", "credentials.json");
+        string path;
+
+#if UNITY_EDITOR
+        // 에디터: Assets 폴더 한 단계 위 = 프로젝트 루트
+        path = System.IO.Path.Combine(Application.dataPath, "..", "credentials.json");
+#else
+        // 빌드: 실행 파일(또는 .app)과 같은 디렉터리
+        path = System.IO.Path.Combine(
+            System.IO.Path.GetDirectoryName(Application.dataPath), "credentials.json");
+#endif
         path = System.IO.Path.GetFullPath(path);
 
         if (!System.IO.File.Exists(path))

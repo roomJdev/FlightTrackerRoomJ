@@ -23,6 +23,12 @@ public class FlightTracker : MonoBehaviour
     [Tooltip("구체 반지름 + 이 값만큼 띄워서 dot을 표면 위에 올림")]
     [SerializeField] private float surfaceOffset = 0.3f;
 
+    [Header("Material")]
+    [Tooltip("URP Unlit 셰이더로 만든 Material 에셋을 할당\n" +
+             "(Project > Create > Material → Shader: Universal Render Pipeline/Unlit)\n" +
+             "미할당 시 빌드에서 분홍색으로 보임")]
+    [SerializeField] private Material dotMaterialTemplate;
+
     [Header("Continent Colors")]
     [SerializeField] private Color colorAsia          = new Color(0.2f, 0.85f, 1.0f);  // 하늘색
     [SerializeField] private Color colorEurope        = new Color(0.5f, 0.5f,  1.0f);  // 파란보라
@@ -274,16 +280,17 @@ public class FlightTracker : MonoBehaviour
 
     private Material CreateDotMaterial(Color color)
     {
-        // URP: Unlit 셰이더 사용 → 조명 영향 없이 항상 지정 색상으로 표시됨
-        var shader = Shader.Find("Universal Render Pipeline/Unlit");
-        if (shader == null)
+        if (dotMaterialTemplate == null)
         {
-            Debug.LogError("[FlightTracker] URP Unlit 셰이더를 찾을 수 없음. 패키지 설치 확인 필요.");
-            return new Material(Shader.Find("Hidden/InternalErrorShader"));
+            Debug.LogError("[FlightTracker] dotMaterialTemplate이 할당되지 않았습니다.\n" +
+                           "Inspector에서 URP Unlit Material을 Dot Material Template에 할당하세요.");
+            // 에디터 전용 폴백 (빌드에서는 분홍)
+            return new Material(Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Hidden/InternalErrorShader"));
         }
 
-        var mat = new Material(shader);
+        var mat = new Material(dotMaterialTemplate);
         mat.SetColor("_BaseColor", color);
+        mat.enableInstancing = true;
         return mat;
     }
 }
